@@ -1,0 +1,120 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.debug1 {
+    background-color: lime;
+}
+
+.debug2 {
+    background-color: fuchsia;
+}
+
+.debug3 {
+    background-color: aqua;
+}
+
+div.debug {
+    background-color: white !important;
+}
+
+div.top, div.middle {
+    display: block;
+    position: fixed;
+    width: 100vw;
+}
+
+div.top {
+    top: 0;
+    height: 20vh;
+}
+
+div.middle {
+    top: 20vh;
+    height: 60vh;
+}
+
+div.bottom {
+    text-align: center;
+    clear: both;
+    display: block;
+    height: 20vh;
+    position: fixed;
+    top: 80vh;
+    width: 100vw;
+}
+
+
+div.left, div.right {
+    display: block;
+    float: left;
+    height: 60vh;
+    width: 50vw;
+}
+
+div.top h1.instruction {
+    margin-top: 2em;
+    display: none;
+}
+
+h1 {
+    font-family: 'Open Sans Condensed', sans-serif;
+    text-align: center;
+    margin: 1em;
+    font-size: 24pt;
+}
+
+div.grid {
+    display: block;
+    width: 50%;
+    height: 70%;
+    margin: 0 auto;
+    text-align: center;
+    /*border: 1px solid #1155cc;*/
+}
+
+input[type="radio"]{
+  width: 2em;
+  height: 2em;
+}
+
+
+button {
+    font-family: 'Open Sans Condensed', sans-serif;
+    margin: 1em;
+    font-size: 18pt;
+    padding: 0.5em 1em;
+    border-radius: 10px;
+    background-color: #1155cc; /*IDIOTS*/
+    border: 1px solid #1155cc;
+    color: white;
+}
+
+button:hover {
+    color: #1155cc;
+    background-color: white;
+    border: 1px solid #1155cc;
+}
+
+button:disabled {
+    color: #fff;
+    background-color: #ccc;
+    border-color: #333;
+}
+
+progress::-webkit-progress-value {
+    background: #1155cc;
+}
+
+progress {
+    color: #1155cc;
+    display: block;
+    margin: 0 auto;
+    width: 50vw;
+}
