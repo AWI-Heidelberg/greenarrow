@@ -175,6 +175,8 @@
         }
     }
 
+    // HELLO
+
     function Grid(element) {
         var self = this;
         this.element = element;
@@ -271,7 +273,7 @@
 
             image.style.position = 'absolute';
             image.style.left = (self.element.offsetLeft + point[0]) + "px";
-            image.style.top = (self.element.offsetTop + point[1]) + "px";
+            image.style.top = (self.element.offsetTop + point[1]) + "px";1
             image.style.width = point[2] + "px";
             image.style.height = point[3] + "px";
 
