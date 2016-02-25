@@ -1,21 +1,29 @@
 (function (window) {
 
-    // Constants
-    var BUTTON_NEXT = "Weiter";
-    var BUTTON_START = "Start";
-    var BUTTON_STOP = "Stop"
-
-    var OPTION_VALUE_A = 'A';
-    var OPTION_VALUE_B = 'B';
-    var OPTION_ID_PREFIX = 'option_';
-    var OPTION_ID_A = "#" + OPTION_ID_PREFIX + OPTION_VALUE_A;
-    var OPTION_ID_B = "#" + OPTION_ID_PREFIX + OPTION_VALUE_B;
+    // Changable values
+    var DURATION_IN_SECONDS = 12;
+    var GRID_ROWS = 5;
+    var GRID_COLUMNS = GRID_ROWS;
 
     var POSITIVE_PROBABILITY_LEFT = 0.45;
     var POSITIVE_PROBABILITY_RIGHT = 0.60;
 
+    // Constants
+    var BUTTON_NEXT = "Weiter";
+    var BUTTON_START = "Start";
+    var BUTTON_STOP = "Stop";
+
+    var OPTION_ID_A = "#" + OPTION_ID_PREFIX + OPTION_VALUE_A;
+    var OPTION_ID_B = "#" + OPTION_ID_PREFIX + OPTION_VALUE_B;
+
+    var OPTION_ID_PREFIX = 'option_';
+    var OPTION_VALUE_A = 'A';
+    var OPTION_VALUE_B = 'B';
+
+    var STATE_CHOICE = 2;
+    var STATE_RUNNING = 1;
+    var STATE_STOPPED = 0;
     var TICK_INTERVAL = 500;
-    var DURATION_IN_SECONDS = 24; // How long is a round?
 
     var ARROW_UP = 'up.svg';
     var ARROW_DOWN = 'down.svg';
@@ -27,23 +35,6 @@
     arrows[1] = ARROW_UP;
     arrows[-1] = ARROW_DOWN;
 
-    var GRID_ROWS = 5;
-    var GRID_COLUMNS = GRID_ROWS;
-
-    var STATE_STOPPED = 0;
-    var STATE_RUNNING = 1;
-    var STATE_CHOICE = 2;
-
-    // Debug
-    var RUN_FAST = false;
-
-    if(RUN_FAST) {
-        TICK_INTERVAL = 50;
-        DURATION_IN_SECONDS = 1000;
-        GRID_ROWS = 50;
-        GRID_COLUMNS = GRID_ROWS;
-    }
-
     // Application
     var interval = null;
     var state = STATE_STOPPED;
@@ -51,7 +42,6 @@
 
     var keyboard = new Keyboard();
     var ui = new UI();
-
 
     function Logger () {
 
@@ -121,8 +111,8 @@
         }
     }
 
-    function randomDirection () {
-        if(Math.random() > POSITIVE_PROBABILITY_LEFT) {
+    function randomDirection (PROPABILITY) {
+        if(Math.random() > PROPABILITY) {
             return 1;
         } else {
             return -1;
@@ -138,15 +128,23 @@
     }
 
     var ticks = 0;
+    var frames = 0;
     function tick (ui) {
         // Limit frame rate
-        ticks += 1;
-        if(ticks % 2 == 0) {
+        logger.print(ticks);
+        logger.print(frames);
 
-            // Killswitch to deactivate frameate
-            if(!RUN_FAST) {
-               return;
-            }
+        if (frames >= DURATION_IN_SECONDS) {
+            stopTimer(ui);
+            state = STATE_CHOICE;
+            return;
+        }
+
+        ticks += 1;
+        if (ticks % 2 == 0) {
+            // Framerate Choke
+            frames += 1;
+            return;
         }
         ui.update(randomDirection, randomPosition);
     }
@@ -158,6 +156,8 @@
     }
 
     function stopTimer (ui) {
+        frames = 0;
+        ticks = 0;
         clearInterval(interval);
         ui.stop();
     }
@@ -175,8 +175,6 @@
         }
     }
 
-    // HELLO
-
     function Grid(element) {
         var self = this;
         this.element = element;
@@ -186,6 +184,7 @@
             while (self.element.hasChildNodes()) {
                 self.element.removeChild(element.lastChild);
             }
+            self.positions = {};
         };
 
         function mapToCellPixel (position) {
@@ -312,47 +311,48 @@
         var grid_left = new Grid(elements[0]);
         var grid_right = new Grid(elements[1]);
 
-        function progress (value) {
+        function progress (value) {progressBar
             progressBar.value += value;
-            if (progressBar.value == progressBar.max) {
-                stopTimer(self);
-            }
         };
 
         this.start = function () {
             resetProgressBar();
             switchToStopButton();
             clearGrids();
-        }
+        };
 
         this.stop = function () {
             resetProgressBar();
             switchToStartButton();
             clearGrids();
             showChoice();
-        }
+        };
 
         this.reset = function () {
             activateSpacebar();
             clearGrids();
             hideInstruction();
             switchToStartButton();
-        }
+        };
 
         this.update = function (randomDirection, randomPosition) {
             progress(1);
 
             var left = grid_left.update(
-                randomDirection,
+                function () {
+                    return randomDirection(POSITIVE_PROBABILITY_LEFT);
+                },
                 randomPosition
             );
 
             var right = grid_right.update(
-                randomDirection,
+                function () {
+                    return randomDirection(POSITIVE_PROBABILITY_RIGHT);
+                },
                 randomPosition
             );
             logger.tick(left, right);
-        }
+        };
 
         function resetProgressBar () {
             progressBar.max = DURATION_IN_SECONDS;
@@ -372,11 +372,11 @@
         }
 
         function selectLeft () {
-            $(OPTION_ID_A).check();
+            $(OPTION_ID_A).checked = true;
         }
 
         function selectRight () {
-            $(OPTION_ID_B).check();
+            $(OPTION_ID_B).checked = true;
         }
 
         this.onClick = function (handle) {
