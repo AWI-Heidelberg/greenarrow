@@ -1,12 +1,15 @@
 (function (window) {
 
+// Consider this example for request animation frame throttle
+// http://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+
     // Changable values
-    var DURATION_IN_SECONDS = 12;
-    var GRID_ROWS = 5;
+    var DURATION_IN_SECONDS = 24;
+    var GRID_ROWS = 6;
     var GRID_COLUMNS = GRID_ROWS;
 
-    var POSITIVE_PROBABILITY_LEFT = 0.45;
-    var POSITIVE_PROBABILITY_RIGHT = 0.60;
+    var POSITIVE_PROBABILITY_LEFT = 0.9;
+    var POSITIVE_PROBABILITY_RIGHT = 0.1;
 
     // Constants
     var BUTTON_NEXT = "Weiter";

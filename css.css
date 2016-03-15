@@ -17,7 +17,8 @@
 }
 
 .debug3 {
-    background-color: aqua;
+    /*background-color: aqua;*/
+    border: 1px solid black;
 }
 
 div.debug {
